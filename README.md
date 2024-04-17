@@ -6,3 +6,6 @@
 //筛选D盘（盘可以换） 文件类型为zip(zip可以更换)  
 //命令行 php searchBigFileForYourWindows.php  D:  zip  
 //命令行 php searchBigFileForYourWindows.php  C:  zip   
+
+筛选D盘 ，无论后缀
+命令行 php searchBigFileForYourWindows.php D:   

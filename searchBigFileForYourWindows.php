@@ -23,10 +23,19 @@ class  a
                         $extension = pathinfo($directory . '/' . $file, PATHINFO_EXTENSION);
                         if ($postfix) {
                             if ($postfix == $extension) {
-                                self::$size[@filesize($directory . '/' . $file)] = $directory . '/' . $file;
+                                if(isset(self::$size[@filesize($directory . '/' . $file)])){
+                                    self::$size[@filesize($directory . '/' . $file)+mt_rand(1,9)] = $directory . '/' . $file;
+                                }else{
+                                    self::$size[@filesize($directory . '/' . $file)] = $directory . '/' . $file;
+                                }
+
                             }
                         } else {
-                            self::$size[@filesize($directory . '/' . $file)] = $directory . '/' . $file;
+                            if(isset(self::$size[@filesize($directory . '/' . $file)])){
+                                self::$size[@filesize($directory . '/' . $file)+mt_rand(1,9)] = $directory . '/' . $file;
+                            }else{
+                                self::$size[@filesize($directory . '/' . $file)] = $directory . '/' . $file;
+                            }
                         }
 
 
@@ -40,12 +49,14 @@ class  a
     }
 }
 
+$time1 = time();
+
 //盘符
 $output=[];
 $postfix = null;
-if(count($argv) == 3){
+if(count($argv) >= 2){
     $output[] = $argv[1];
-    $postfix = $argv[2];
+    $postfix = isset($argv[2])?$argv[2]:'';
 }else{
     // 执行wmic命令获取分区信息
     exec('wmic logicaldisk get name', $output);
@@ -67,7 +78,7 @@ foreach ($output as $k=>$v){
     $size = $size+$arr;
 }
 krsort($size);
-$gbkString = iconv('UTF-8', 'GBK//IGNORE', '占用空间最大的前10个文件');
+$gbkString = iconv('UTF-8', 'GBK//IGNORE', '占用空间最大的前20个文件');
 var_dump($gbkString);
 $count = 0;
 foreach ($size as $key => $value) {
@@ -80,14 +91,9 @@ foreach ($size as $key => $value) {
     }
 }
 
+$time2 = time();
+$gbkString = iconv('UTF-8', 'GBK//IGNORE', '执行耗时');
+var_dump($gbkString.($time2-$time1));
 
-//执行  要求php7.0
-
-//筛选所有盘 文件类型不限制
-//命令行 php searchBigFileForYourWindows.php
-
-//筛选D盘（盘可以换） 文件类型为zip(zip可以更换)
-//命令行 php searchBigFileForYourWindows.php  D:  zip
-//命令行 php searchBigFileForYourWindows.php  C:  zip
 
 ?>
